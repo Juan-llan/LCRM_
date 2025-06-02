@@ -2,7 +2,7 @@
 
 LCRM es una aplicación web diseñada para ayudar a negocios locales a gestionar sus clientes, ventas e interacciones de manera eficiente.
 
-## 🚀 Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 - **Frontend:** React.js
 - **Backend:** Node.js (REST API)
@@ -10,7 +10,7 @@ LCRM es una aplicación web diseñada para ayudar a negocios locales a gestionar
 - **Autenticación:** JSON Web Tokens (JWT)
 - **Control de versiones:** Git + GitHub
 
-## 🧩 Funcionalidades principales
+##  Funcionalidades principales
 
 - Registro y administración de clientes
 - Registro de ventas por cliente
@@ -19,7 +19,7 @@ LCRM es una aplicación web diseñada para ayudar a negocios locales a gestionar
 - Autenticación de usuarios con roles (admin / vendedor)
 - Dashboard con métricas generales del negocio
 
-## 🛠️ Estado del proyecto
+## 🛠 Estado del proyecto
 
 Desarrollo en curso.  
 Repositorio creado como parte del curso **Desarrollo de Aplicaciones Empresariales**
