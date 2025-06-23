@@ -1,7 +1,9 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabaseClient'; // Asegúrate de tener este archivo configurado
+import { supabase } from '../services/supabaseClient';
+import Navbar from '../components/Navbar';
+import './login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -31,29 +33,49 @@ export default function Login() {
         .single();
 
       if (profileError || !profile) {
-        setErrorMsg('No se pudo obtener el perfil del usuario.');
+        setErrorMsg('Perfil no encontrado. Contacta al administrador.');
         return;
       }
 
-      // Redireccionar según el rol
       if (profile.role === 'admin') {
         navigate('/admin/dashboard');
-      } else {
+      } else if (profile.role === 'vendedor') {
         navigate('/vendedor/dashboard');
+      } else {
+        setErrorMsg('Rol no reconocido. Contacta al administrador.');
       }
     }
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Ingresar</button>
-      </form>
-      {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
-    </div>
+    <>
+      <Navbar />
+      <div className="login-container">
+        <div className="login-card">
+          <h2>Iniciar Sesión</h2>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Correo"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="submit">Ingresar</button>
+          </form>
+          {errorMsg && <p className="error-msg">{errorMsg}</p>}
+          <div className="toggle">
+            ¿No tienes cuenta? <a href="/register">Regístrate</a>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
-

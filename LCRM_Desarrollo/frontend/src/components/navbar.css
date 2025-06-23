@@ -1,0 +1,45 @@
+/* src/components/navbar.css */
+.navbar {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.navbar .logo {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #343A40;
+}
+
+/* Nuevas reglas para el logo */
+.navbar .logo img {
+  height: 40px; /* Ajusta este valor para cambiar el tamaño */
+  width: auto; /* Mantiene la proporción original */
+}
+
+.navbar .nav-buttons a,
+.navbar .nav-buttons button {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #343A40;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.navbar .nav-buttons a:hover,
+.navbar .nav-buttons button:hover {
+  background-color: #E9ECEF;
+}
+
+.navbar .nav-buttons .logout {
+  background-color: #4D96FF;
+  color: white;
+}
