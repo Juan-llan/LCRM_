@@ -1,9 +1,11 @@
 // src/pages/DashboardVendedor.jsx
+import Layout from '../components/Layout';
 export default function DashboardVendedor() {
   return (
-    <div>
+    <Layout>
       <h1>Panel del Vendedor</h1>
-      <p>Bienvenido. Aquí puedes registrar ventas, clientes e interacciones.</p>
-    </div>
+      {/* contenido específico */}
+    </Layout>
   );
 }
+//       <input

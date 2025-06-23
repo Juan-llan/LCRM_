@@ -1,45 +1,61 @@
-/* src/components/navbar.css */
 .navbar {
-  background-color: #ffffff;
+  background-color: #F8F9FA;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.navbar .logo {
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #343A40;
+.navbar-logo .logo-link {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4D96FF;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-/* Nuevas reglas para el logo */
-.navbar .logo img {
-  height: 40px; /* Ajusta este valor para cambiar el tamaño */
-  width: auto; /* Mantiene la proporción original */
+.navbar-logo .logo-link:hover {
+  color: #FF6B6B;
 }
 
-.navbar .nav-buttons a,
-.navbar .nav-buttons button {
-  margin-left: 1rem;
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li a {
   text-decoration: none;
   color: #343A40;
+  font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  transition: background-color 0.3s;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.navbar .nav-buttons a:hover,
-.navbar .nav-buttons button:hover {
+.navbar-links li a:hover {
   background-color: #E9ECEF;
+  color: #000000;
 }
 
-.navbar .nav-buttons .logout {
+.logout-btn {
   background-color: #4D96FF;
   color: white;
+  border: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #1e7fff;
 }

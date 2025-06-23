@@ -1,4 +1,5 @@
 // src/pages/DashboardAdmin.jsx
+import Layout from '../components/Layout';
 export default function DashboardAdmin() {
   return (
     <div>

@@ -1,21 +1,27 @@
 // src/components/Navbar.jsx
-import { Link } from 'react-router-dom';
-import logo from '../assets/logo.png'; // Ruta al archivo del logo
+import { Link, useNavigate } from 'react-router-dom';
 import './navbar.css';
 
 export default function Navbar() {
-  const isAuthenticated = !!localStorage.getItem('session'); // o usar contexto
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    console.log('🚪 Sesión cerrada');
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
-      <div className="logo">
-        <img src={logo} alt="Logo" /> {/* Añadido el logo aquí */}
+      <div className="navbar-logo">
+        <Link to="/" className="logo-link">LCRM</Link>
       </div>
-      <div className="nav-buttons">
-        {!isAuthenticated && <Link to="/login">Iniciar Sesión</Link>}
-        {!isAuthenticated && <Link to="/register">Registrarse</Link>}
-        {isAuthenticated && <button className="logout">Cerrar Sesión</button>}
-      </div>
+      <ul className="navbar-links">
+        <li><Link to="/admin/dashboard">dashboard</Link></li>
+        
+        <li><Link to="/clientes">Clientes</Link></li>
+        <li><button className="logout-btn" onClick={handleLogout}>Cerrar sesión</button></li>
+      </ul>
     </nav>
   );
 }

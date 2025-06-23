@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardVendedor from './pages/DashboardVendedor';
+import Clients from './pages/Clients';
 
 const App = () => {
   const [role, setRole] = useState(null);
@@ -51,18 +52,17 @@ const App = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
         <Route
           path="/admin/dashboard"
-          element={
-            session && role === 'admin' ? <DashboardAdmin /> : <Navigate to="/" />
-          }
+          element={session && role === 'admin' ? <DashboardAdmin /> : <Navigate to="/" />}
         />
         <Route
           path="/vendedor/dashboard"
-          element={
-            session && role === 'vendedor' ? <DashboardVendedor /> : <Navigate to="/" />
-          }
+          element={session && role === 'vendedor' ? <DashboardVendedor /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/clientes"
+          element={session ? <Clients /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
