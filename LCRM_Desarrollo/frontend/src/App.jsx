@@ -1,61 +1,39 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from './services/supabaseClient';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardVendedor from './pages/DashboardVendedor';
 
-
 const App = () => {
-  const [session, setSession] = useState(null);
   const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true); // para evitar render anticipado
+  const [session, setSession] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Obtener sesión activa
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        await fetchUserRole(session.user.id);
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setRole(payload.role);
+        setSession(true);
+        console.log('✅ Sesión iniciada correctamente. Rol:', payload.role);
+      } catch (e) {
+        console.error('❌ Token inválido. Cerrando sesión...');
+        localStorage.removeItem('token');
       }
-      setLoading(false);
-    });
-
-    // Escuchar cambios en la sesión
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        await fetchUserRole(session.user.id);
-      } else {
-        setRole(null);
-      }
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
-  const fetchUserRole = async (userId) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', userId)
-      .single();
-
-    if (!error && data) {
-      setRole(data.role);
+    } else {
+      console.log('ℹ️ No hay token presente. Usuario no autenticado.');
     }
-  };
+    setLoading(false);
+  }, []);
 
   if (loading) return <div>Cargando...</div>;
 
   return (
     <Router>
       <Routes>
-        {/* Redirección inteligente según el rol */}
         <Route
           path="/"
           element={
@@ -73,6 +51,7 @@ const App = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route
           path="/admin/dashboard"
           element={

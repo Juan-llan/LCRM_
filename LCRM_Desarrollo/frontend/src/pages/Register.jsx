@@ -1,6 +1,5 @@
 // src/pages/Register.jsx
 import { useState } from 'react';
-import { supabase } from '../services/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import './register.css';
@@ -16,48 +15,27 @@ export default function Register() {
     e.preventDefault();
     setErrorMsg('');
 
-    // 1. Crear cuenta de usuario (auth)
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (signUpError) {
-      setErrorMsg(signUpError.message);
-      return;
-    }
-
-    // 2. Iniciar sesión para autenticar al usuario (activar auth.uid())
-    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (loginError || !loginData.user) {
-      setErrorMsg('Error al iniciar sesión después del registro.');
-      return;
-    }
-
-    const userId = loginData.user.id;
-
-    // 3. Insertar perfil en la tabla 'profiles' (el usuario ya está autenticado)
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert([
-        {
-          id: userId,
-          full_name: name,
-          role: 'vendedor', // asignación por defecto
+    try {
+      const res = await fetch('http://localhost:3001/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      ]);
+        body: JSON.stringify({ email, password, name }),
+      });
 
-    if (profileError) {
-      setErrorMsg('Error al guardar perfil: ' + profileError.message);
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.error || 'Error al registrarse');
+        return;
+      }
+
+      localStorage.setItem('token', data.token);
+      navigate('/vendedor/dashboard');
+    } catch (err) {
+      setErrorMsg('Error en la conexión con el servidor');
     }
-
-    // 4. Redirigir al dashboard correspondiente
-    navigate('/vendedor/dashboard');
   };
 
   return (

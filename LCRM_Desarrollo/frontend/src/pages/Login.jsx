@@ -1,7 +1,6 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabaseClient';
 import Navbar from '../components/Navbar';
 import './login.css';
 
@@ -15,35 +14,32 @@ export default function Login() {
     e.preventDefault();
     setErrorMsg('');
 
-    const { data: sessionData, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const res = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (error) {
-      setErrorMsg('Credenciales incorrectas o error en el inicio de sesión.');
-      return;
-    }
+      const data = await res.json();
 
-    if (sessionData?.user) {
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', sessionData.user.id)
-        .single();
-
-      if (profileError || !profile) {
-        setErrorMsg('Perfil no encontrado. Contacta al administrador.');
+      if (!res.ok) {
+        setErrorMsg(data.error || 'Error al iniciar sesión');
         return;
       }
 
-      if (profile.role === 'admin') {
+      localStorage.setItem('token', data.token);
+
+      const payload = JSON.parse(atob(data.token.split('.')[1]));
+      if (payload.role === 'admin') {
         navigate('/admin/dashboard');
-      } else if (profile.role === 'vendedor') {
-        navigate('/vendedor/dashboard');
       } else {
-        setErrorMsg('Rol no reconocido. Contacta al administrador.');
+        navigate('/vendedor/dashboard');
       }
+    } catch (err) {
+      setErrorMsg('Error en la conexión con el servidor');
     }
   };
 
@@ -54,20 +50,8 @@ export default function Login() {
         <div className="login-card">
           <h2>Iniciar Sesión</h2>
           <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              placeholder="Correo"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input type="email" placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button type="submit">Ingresar</button>
           </form>
           {errorMsg && <p className="error-msg">{errorMsg}</p>}
