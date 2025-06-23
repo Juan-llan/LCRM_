@@ -17,12 +17,14 @@ const App = () => {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
+        if (!payload?.id) throw new Error('Token corrupto');
         setRole(payload.role);
         setSession(true);
         console.log('✅ Sesión iniciada correctamente. Rol:', payload.role);
       } catch (e) {
-        console.error('❌ Token inválido. Cerrando sesión...');
+        console.error('❌ Token inválido. Cerrando sesión automáticamente.');
         localStorage.removeItem('token');
+        setSession(false);
       }
     } else {
       console.log('ℹ️ No hay token presente. Usuario no autenticado.');
@@ -35,35 +37,18 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            session ? (
-              role === 'admin' ? (
-                <Navigate to="/admin/dashboard" />
-              ) : (
-                <Navigate to="/vendedor/dashboard" />
-              )
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-
+        <Route path="/" element={
+          session ? (
+            role === 'admin' ? <Navigate to="/admin/dashboard" /> : <Navigate to="/vendedor/dashboard" />
+          ) : (
+            <Navigate to="/login" />
+          )
+        } />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/admin/dashboard"
-          element={session && role === 'admin' ? <DashboardAdmin /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/vendedor/dashboard"
-          element={session && role === 'vendedor' ? <DashboardVendedor /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/clientes"
-          element={session ? <Clients /> : <Navigate to="/login" />}
-        />
+        <Route path="/admin/dashboard" element={session && role === 'admin' ? <DashboardAdmin /> : <Navigate to="/" />} />
+        <Route path="/vendedor/dashboard" element={session && role === 'vendedor' ? <DashboardVendedor /> : <Navigate to="/" />} />
+        <Route path="/clientes" element={session ? <Clients /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );

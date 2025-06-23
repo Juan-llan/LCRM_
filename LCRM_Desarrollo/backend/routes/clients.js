@@ -9,10 +9,13 @@ function verifyToken(req, res, next) {
   const header = req.headers['authorization'];
   const token = header && header.split(' ')[1];
 
-  if (!token) return res.sendStatus(401);
+  if (!token) return res.status(401).json({ error: 'Token faltante' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      console.warn('❌ Token inválido o expirado:', err.message);
+      return res.status(403).json({ error: 'Token inválido' });
+    }
     req.user = user;
     next();
   });
@@ -38,6 +41,9 @@ router.get('/', verifyToken, async (req, res) => {
 // POST /api/clients
 router.post('/', verifyToken, async (req, res) => {
   const { name, email, telefono, direccion } = req.body;
+
+  console.log('🧪 Payload recibido:', req.body);
+  console.log('🧪 Usuario autenticado:', req.user);
 
   const { data, error } = await supabase
     .from('clients')

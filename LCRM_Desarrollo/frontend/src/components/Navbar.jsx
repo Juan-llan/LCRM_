@@ -1,4 +1,5 @@
 // src/components/Navbar.jsx
+// src/components/Navbar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import './navbar.css';
 
@@ -17,10 +18,13 @@ export default function Navbar() {
         <Link to="/" className="logo-link">LCRM</Link>
       </div>
       <ul className="navbar-links">
-        <li><Link to="/admin/dashboard">dashboard</Link></li>
-        
+        <li><Link to="/admin/dashboard">Dashboard</Link></li>
         <li><Link to="/clientes">Clientes</Link></li>
-        <li><button className="logout-btn" onClick={handleLogout}>Cerrar sesión</button></li>
+        <li>
+          <button className="logout-btn" onClick={handleLogout}>
+            Cerrar sesiónn
+          </button>
+        </li>
       </ul>
     </nav>
   );

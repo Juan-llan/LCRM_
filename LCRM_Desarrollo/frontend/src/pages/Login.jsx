@@ -30,9 +30,12 @@ export default function Login() {
         return;
       }
 
+      localStorage.removeItem('token'); // limpia el token anterior
       localStorage.setItem('token', data.token);
 
       const payload = JSON.parse(atob(data.token.split('.')[1]));
+      console.log('🔐 Login exitoso. Rol:', payload.role);
+
       if (payload.role === 'admin') {
         navigate('/admin/dashboard');
       } else {
